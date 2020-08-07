@@ -1,8 +1,8 @@
-import { IUrl, IImage } from "./defaults";
-import { IComicList } from "./comics";
-import { IStoryList } from "./stories";
-import { IEventList } from "./events";
-import { ISeriesList } from "./series";
+import {IUrl, IImage} from './defaults';
+import {IComicList} from './comics';
+import {IStoryList} from './stories';
+import {IEventList} from './events';
+import {ISeriesList} from './series';
 
 export interface ICharacterParameters {
   name?: string;
