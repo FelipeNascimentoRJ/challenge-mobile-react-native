@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 
 // Components
 import {StatusBar} from 'react-native';
@@ -18,28 +18,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 // Types
 import {ICharacter} from '../../services/marvel/types/characters';
 
-// Utils
-import TextLimit from '../../utils/text-limit';
-
 // Components
+import List from '../../components/list';
 import ListEmpty from '../../components/list-empty';
-import ListFooter from '../../components/list-footer';
 
 // Styles
-import {
-  Screen,
-  Header,
-  HeaderLogo,
-  HeaderActions,
-  CharacterList,
-  CharacterContainer,
-  CharacterImage,
-  CharacterContent,
-  CharacterTitle,
-  CharacterDescription,
-  CharacterFooter,
-  CharacterText,
-} from './styles';
+import {Screen, Header, HeaderLogo, HeaderActions} from './styles';
 
 // Logo
 import logo from '../../assets/logo.png';
@@ -67,15 +51,14 @@ export default function Home() {
 
   const {data} = characters;
 
-  const handleLoadMore = () => dispatch(actions.charactersRequest());
-
   const handleClickFavorite = () =>
     setFavoriteEnabled((prevState) => !prevState);
 
   const handleClickSearch = () => console.log('search');
 
-  const handleCharacterPress = (character: ICharacter) =>
+  const handleCharacterPress = useCallback((character: ICharacter) => {
     console.log(character);
+  }, []);
 
   const renderHeader = (
     <Header style={shadow}>
@@ -104,72 +87,11 @@ export default function Home() {
   );
 
   const renderListEmpty = <ListEmpty />;
-  const renderListFooter = <ListFooter />;
-
-  const renderCharacter = (character: ICharacter) => {
-    const {id, thumbnail, name, description, events, series} = character;
-
-    const icon = id && id % 2 === 0 ? 'favorite' : 'favorite-border';
-    const color = id && id % 2 === 0 ? '#ff0000' : '#666';
-
-    return (
-      <CharacterContainer
-        onPress={() => handleCharacterPress(character)}
-        style={shadow}>
-        <CharacterImage
-          source={{
-            uri: `${thumbnail?.path}.${thumbnail?.extension}`,
-          }}
-        />
-        <CharacterContent>
-          {name ? (
-            <CharacterTitle>{TextLimit.limit(name, 18)}</CharacterTitle>
-          ) : null}
-          {description ? (
-            <CharacterDescription>
-              {TextLimit.limit(description, 60)}
-            </CharacterDescription>
-          ) : null}
-          <CharacterFooter>
-            {events ? (
-              <CharacterText
-                color={events?.items?.length ? '#000' : '#666'}
-                bold={
-                  events?.items?.length !== 0
-                }>{`Events ${events?.items?.length}`}</CharacterText>
-            ) : null}
-            {series ? (
-              <CharacterText
-                color={series?.items?.length ? '#000' : '#666'}
-                bold={
-                  series?.items?.length !== 0
-                }>{`Series ${series?.items?.length}`}</CharacterText>
-            ) : null}
-            <CharacterText
-              color={icon === 'favorite' ? '#000' : '#666'}
-              bold={icon === 'favorite'}>
-              Favorite <Icon name={icon} size={11} color={color} />
-            </CharacterText>
-          </CharacterFooter>
-        </CharacterContent>
-      </CharacterContainer>
-    );
-  };
 
   const renderList = (
     <>
       {renderHeader}
-      <CharacterList
-        data={data}
-        renderItem={({item}) => renderCharacter(item)}
-        keyExtractor={(character) => `${character.id}`}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={renderListEmpty}
-        ListFooterComponent={renderListFooter}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-      />
+      <List onPress={handleCharacterPress} />
     </>
   );
 
