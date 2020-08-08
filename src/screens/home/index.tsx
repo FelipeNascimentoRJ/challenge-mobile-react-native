@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
 // Components
 import {StatusBar} from 'react-native';
@@ -12,86 +12,50 @@ import {IApplicationState} from '../../store';
 // Actions
 import * as actions from '../../store/ducks/rootActions';
 
-// Icons
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
 // Types
 import {ICharacter} from '../../services/marvel/types/characters';
 
 // Components
+import Header from '../../components/header';
 import List from '../../components/list';
 import ListEmpty from '../../components/list-empty';
 
 // Styles
-import {Screen, Header, HeaderLogo, HeaderActions} from './styles';
-
-// Logo
-import logo from '../../assets/logo.png';
+import {Screen} from './styles';
 
 export default function Home() {
+  // Dispatch
   const dispatch = useDispatch();
+
+  // Redux States
   const characters = useSelector(
     (state: IApplicationState) => state.characters,
   );
 
-  // States
-  const [favoriteEnabled, setFavoriteEnabled] = useState<boolean>(false);
+  // Favorite button changes
+  const handleChangeFavorite = useCallback((enabled: boolean) => {
+    console.log('Favorite Enabled: ', enabled);
+  }, []);
 
-  // Shadow
-  const shadow = {
-    elevation: 5,
-    shadowOffset: {
-      width: 3,
-      height: 3,
-    },
-    shadowColor: 'rgba(0, 0, 0, 0.2)',
-    shadowOpacity: 1,
-    shadowRadius: 3,
-  };
+  // Search button press
+  const handlePressSearch = () => console.log('search');
 
-  const {data} = characters;
-
-  const handleClickFavorite = () =>
-    setFavoriteEnabled((prevState) => !prevState);
-
-  const handleClickSearch = () => console.log('search');
-
-  const handleCharacterPress = useCallback((character: ICharacter) => {
+  // List item press
+  const handlePressCharacter = useCallback((character: ICharacter) => {
     console.log(character);
   }, []);
 
-  const renderHeader = (
-    <Header style={shadow}>
-      <HeaderLogo source={logo} />
-      <HeaderActions>
-        <Icon.Button
-          name={favoriteEnabled ? 'favorite' : 'favorite-border'}
-          size={30}
-          color={favoriteEnabled ? '#ff0000' : '#666'}
-          backgroundColor="#fff"
-          iconStyle={{height: 30}}
-          borderRadius={200}
-          onPress={handleClickFavorite}
-        />
-        <Icon.Button
-          name="search"
-          size={30}
-          color="#666"
-          backgroundColor="#fff"
-          iconStyle={{height: 30}}
-          borderRadius={200}
-          onPress={handleClickSearch}
-        />
-      </HeaderActions>
-    </Header>
-  );
-
+  // List empty
   const renderListEmpty = <ListEmpty />;
 
-  const renderList = (
+  // Header and list
+  const renderHeaderAndList = (
     <>
-      {renderHeader}
-      <List onPress={handleCharacterPress} />
+      <Header
+        onChangeFavorite={handleChangeFavorite}
+        onPressSearch={handlePressSearch}
+      />
+      <List onPress={handlePressCharacter} />
     </>
   );
 
@@ -103,7 +67,9 @@ export default function Home() {
   return (
     <Screen>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      {data == null || data.length === 0 ? renderListEmpty : renderList}
+      {characters.data == null || characters.data.length === 0
+        ? renderListEmpty
+        : renderHeaderAndList}
     </Screen>
   );
 }
