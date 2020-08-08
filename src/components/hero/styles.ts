@@ -94,12 +94,16 @@ export const ItemImage = styled(Image)``;
 
 export const ItemDescription = styled(Description)``;
 
-export const ItemButton = styled.TouchableOpacity`
+export interface IItemButton {
+  color: string;
+}
+
+export const ItemButton = styled.TouchableOpacity<IItemButton>`
   margin: 10px;
   align-items: center;
   justify-content: center;
   padding: 15px;
-  background-color: #ff0000;
+  background-color: ${({color}) => color};
   border-radius: 15px;
 `;
 

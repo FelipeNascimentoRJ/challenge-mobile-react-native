@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 
 // Components
-import {ActivityIndicator, Linking} from 'react-native';
+import {ActivityIndicator, Linking, Share} from 'react-native';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -55,6 +55,14 @@ export default function ModalItem({show, item, onClose}: IModalItem) {
     }
   };
 
+  const handleShareUrl = async (text: string, url: string) => {
+    await Share.share({
+      title: text, // android
+      message: text, // ios
+      url,
+    });
+  };
+
   const loadingItem = async () => {
     if (item.resourceURI !== undefined) {
       // Instance
@@ -103,14 +111,27 @@ export default function ModalItem({show, item, onClose}: IModalItem) {
 
       if (url.url !== undefined) {
         renderButton = (
-          <ItemButton
-            onPress={() =>
-              handleOpenUrl(
-                url.url !== undefined ? url.url : 'https://marvel.com',
-              )
-            }>
-            <ItemButtonLabel>Access</ItemButtonLabel>
-          </ItemButton>
+          <>
+            <ItemButton
+              color="#ff0000"
+              onPress={() =>
+                handleOpenUrl(
+                  url.url !== undefined ? url.url : 'https://marvel.com',
+                )
+              }>
+              <ItemButtonLabel>Access</ItemButtonLabel>
+            </ItemButton>
+            <ItemButton
+              color="#999"
+              onPress={() =>
+                handleShareUrl(
+                  title !== undefined ? title : 'Marvel',
+                  url.url !== undefined ? url.url : 'https://marvel.com',
+                )
+              }>
+              <ItemButtonLabel>Share</ItemButtonLabel>
+            </ItemButton>
+          </>
         );
       }
     }

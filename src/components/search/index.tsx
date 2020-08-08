@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -20,6 +20,14 @@ export interface IModalSearch {
 
 export default function ModalSearch({show, onPress, onClose}: IModalSearch) {
   const [search, setSearch] = useState<string>('');
+
+  const handlePressCharacter = useCallback(
+    (character: ICharacter) => {
+      onClose();
+      onPress(character);
+    },
+    [onClose, onPress],
+  );
   // Style
   const iconStyles = {height: 30};
 
@@ -38,7 +46,7 @@ export default function ModalSearch({show, onPress, onClose}: IModalSearch) {
               onPress={onClose}
             />
             <Input
-              autoFocus={true}
+              autoFocus={false}
               keyboardType="default"
               placeholder="Search..."
               value={search}
@@ -57,7 +65,7 @@ export default function ModalSearch({show, onPress, onClose}: IModalSearch) {
             ) : null}
           </Search>
         </Header>
-        <List search={search} onPress={onPress} />
+        <List search={search} onPress={handlePressCharacter} />
       </Container>
     </Modal>
   );
