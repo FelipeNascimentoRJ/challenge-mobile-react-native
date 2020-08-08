@@ -1,13 +1,14 @@
 'use strict';
 
 // Axios
-import axios, {AxiosInstance, AxiosResponse} from 'axios';
+import axios, {AxiosResponse} from 'axios';
 
 // MD5
 import md5 from 'md5';
 
 // Types
 import {ICharacterParameters, ICharacterDataWrapper} from './types/characters';
+import {IItemDataWrapper} from './types/item';
 
 export default class Marvel {
   /**
@@ -21,11 +22,6 @@ export default class Marvel {
   private readonly pubKey: string;
 
   /**
-   * Axios Instance
-   */
-  private readonly instance: AxiosInstance;
-
-  /**
    * constructor
    *
    * @param priKey string
@@ -34,10 +30,6 @@ export default class Marvel {
   constructor(priKey: string, pubKey: string) {
     this.priKey = priKey;
     this.pubKey = pubKey;
-
-    this.instance = axios.create({
-      baseURL: 'https://gateway.marvel.com/v1/public',
-    });
   }
 
   private getTimeStamp = () => parseInt(`${Date.now() / 1000}`, 10);
@@ -78,8 +70,18 @@ export default class Marvel {
       };
     }
 
-    const uri = `/characters?${this.buildQuery(query)}`;
+    const uri = `https://gateway.marvel.com/v1/public/characters?${this.buildQuery(
+      query,
+    )}`;
 
-    return this.instance.get(uri);
+    return axios.get(uri);
+  }
+
+  public async getItem(url: string): Promise<AxiosResponse<IItemDataWrapper>> {
+    let query = this.getQuery();
+
+    const uri = `${url}?${this.buildQuery(query)}`;
+
+    return axios.get(uri);
   }
 }

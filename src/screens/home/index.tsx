@@ -22,6 +22,7 @@ import ListEmpty from '../../components/list-empty';
 
 // Modals
 import ModalSearch from '../../components/search';
+import ModalHero from '../../components/hero';
 
 // Styles
 import {Screen} from './styles';
@@ -29,6 +30,9 @@ import {Screen} from './styles';
 export default function Home() {
   // Local States
   const [showModalSearch, setShowModalSearch] = useState<boolean>(false);
+  const [showModalHero, setShowModalHero] = useState<boolean>(false);
+  const [character, setCharacter] = useState<ICharacter | null>(null);
+
   // Dispatch
   const dispatch = useDispatch();
 
@@ -46,9 +50,21 @@ export default function Home() {
   const handlePressSearchToggle = () =>
     setShowModalSearch((prevState) => !prevState);
 
+  // Hero close
+  const handlePressHeroClose = () => {
+    setShowModalHero(false);
+    setCharacter(null);
+  };
+
   // List item press
-  const handlePressCharacter = useCallback((character: ICharacter) => {
-    console.log(character);
+  const handlePressCharacter = useCallback((characterSelected: ICharacter) => {
+    setShowModalHero(true);
+    setCharacter(characterSelected);
+  }, []);
+
+  // Favorite item press
+  const handlePressFavorite = useCallback((characterSelected: ICharacter) => {
+    console.log(characterSelected);
   }, []);
 
   // List empty
@@ -81,6 +97,14 @@ export default function Home() {
         onClose={handlePressSearchToggle}
         onPress={handlePressCharacter}
       />
+      {character !== null ? (
+        <ModalHero
+          show={showModalHero}
+          character={character}
+          onClose={handlePressHeroClose}
+          onPressFavorite={handlePressFavorite}
+        />
+      ) : null}
     </Screen>
   );
 }

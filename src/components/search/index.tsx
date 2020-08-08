@@ -40,7 +40,7 @@ export default function ModalSearch({show, onPress, onClose}: IModalSearch) {
             <Input
               autoFocus={true}
               keyboardType="default"
-              placeholder="Buscar..."
+              placeholder="Search..."
               value={search}
               onChangeText={(text) => setSearch(text)}
             />
