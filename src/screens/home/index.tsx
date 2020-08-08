@@ -1,14 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 // Components
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  Text,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import {StatusBar, Text, ActivityIndicator} from 'react-native';
 
 // Redux
 import {useSelector, useDispatch} from 'react-redux';
@@ -25,30 +18,28 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 // Types
 import {ICharacter} from '../../services/marvel/types/characters';
 
-const styles = StyleSheet.create({
-  areview: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  list: {
-    backgroundColor: 'red',
-  },
-  listFooter: {
-    paddingTop: 15,
-    paddingBottom: 15,
-  },
-  character: {
-    paddingTop: 30,
-    paddingBottom: 30,
-  },
-});
+// Utils
+import TextLimit from '../../utils/text-limit';
+
+// Styles
+import {
+  Screen,
+  Center,
+  Header,
+  HeaderLogo,
+  HeaderActions,
+  CharacterList,
+  CharacterContainer,
+  CharacterImage,
+  CharacterContent,
+  CharacterTitle,
+  CharacterDescription,
+  CharacterFooter,
+  CharacterText,
+} from './styles';
+
+// Logo
+import logo from '../../assets/logo.png';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -56,24 +47,115 @@ export default function Home() {
     (state: IApplicationState) => state.characters,
   );
 
-  const {data} = characters;
+  // States
+  const [favoriteEnabled, setFavoriteEnabled] = useState<boolean>(false);
 
-  console.log(data);
+  // Shadow
+  const shadow = {
+    elevation: 5,
+    shadowOffset: {
+      width: 3,
+      height: 3,
+    },
+    shadowColor: 'rgba(0, 0, 0, 0.2)',
+    shadowOpacity: 1,
+    shadowRadius: 3,
+  };
+
+  const {data} = characters;
 
   const handleLoadMore = () => dispatch(actions.charactersRequest());
 
-  const renderEmpty = (
-    <View style={styles.content}>
-      <Icon name="stars" size={150} color="#1398DE" />
-      <Text>Marvel Heroes</Text>
-    </View>
+  const handleClickFavorite = () =>
+    setFavoriteEnabled((prevState) => !prevState);
+
+  const handleClickSearch = () => console.log('search');
+
+  const handleCharacterPress = (character: ICharacter) =>
+    console.log(character);
+
+  const renderHeader = (
+    <Header style={shadow}>
+      <HeaderLogo source={logo} />
+      <HeaderActions>
+        <Icon.Button
+          name={favoriteEnabled ? 'favorite' : 'favorite-border'}
+          size={30}
+          color={favoriteEnabled ? '#ff0000' : '#666'}
+          backgroundColor="#fff"
+          iconStyle={{height: 30}}
+          borderRadius={200}
+          onPress={handleClickFavorite}
+        />
+        <Icon.Button
+          name="search"
+          size={30}
+          color="#666"
+          backgroundColor="#fff"
+          iconStyle={{height: 30}}
+          borderRadius={200}
+          onPress={handleClickSearch}
+        />
+      </HeaderActions>
+    </Header>
   );
 
-  const renderCharacter = (character: ICharacter) => (
-    <View key={Math.random()} style={styles.character}>
-      <Text>{character.name}</Text>
-    </View>
+  const renderEmpty = (
+    <Center>
+      <Icon name="stars" size={150} color="#1398DE" />
+      <Text>Marvel Heroes</Text>
+    </Center>
   );
+
+  const renderCharacter = (character: ICharacter) => {
+    const {id, thumbnail, name, description, events, series} = character;
+
+    const icon = id && id % 2 === 0 ? 'favorite' : 'favorite-border';
+    const color = id && id % 2 === 0 ? '#ff0000' : '#666';
+
+    return (
+      <CharacterContainer
+        onPress={() => handleCharacterPress(character)}
+        style={shadow}>
+        <CharacterImage
+          source={{
+            uri: `${thumbnail?.path}.${thumbnail?.extension}`,
+          }}
+        />
+        <CharacterContent>
+          {name ? (
+            <CharacterTitle>{TextLimit.limit(name, 18)}</CharacterTitle>
+          ) : null}
+          {description ? (
+            <CharacterDescription>
+              {TextLimit.limit(description, 60)}
+            </CharacterDescription>
+          ) : null}
+          <CharacterFooter>
+            {events ? (
+              <CharacterText
+                color={events?.items?.length ? '#000' : '#666'}
+                bold={
+                  events?.items?.length !== 0
+                }>{`Events ${events?.items?.length}`}</CharacterText>
+            ) : null}
+            {series ? (
+              <CharacterText
+                color={series?.items?.length ? '#000' : '#666'}
+                bold={
+                  series?.items?.length !== 0
+                }>{`Series ${series?.items?.length}`}</CharacterText>
+            ) : null}
+            <CharacterText
+              color={icon === 'favorite' ? '#000' : '#666'}
+              bold={icon === 'favorite'}>
+              Favorite <Icon name={icon} size={11} color={color} />
+            </CharacterText>
+          </CharacterFooter>
+        </CharacterContent>
+      </CharacterContainer>
+    );
+  };
 
   const renderFooter = () => {
     if (!characters.loading) {
@@ -81,25 +163,27 @@ export default function Home() {
     }
 
     return (
-      <View style={styles.content}>
-        <ActivityIndicator size="small" />
-      </View>
+      <Center>
+        <ActivityIndicator size="large" />
+      </Center>
     );
   };
 
   const renderList = (
-    <FlatList
-      data={data}
-      contentContainerStyle={styles.list}
-      renderItem={({item}) => renderCharacter(item)}
-      keyExtractor={(note) => `${note.id}`}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      ListEmptyComponent={renderEmpty}
-      ListFooterComponent={renderFooter}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.5}
-    />
+    <>
+      {renderHeader}
+      <CharacterList
+        data={data}
+        renderItem={({item}) => renderCharacter(item)}
+        keyExtractor={(character) => `${character.id}`}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={renderEmpty}
+        ListFooterComponent={renderFooter}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+      />
+    </>
   );
 
   React.useEffect(() => {
@@ -108,10 +192,9 @@ export default function Home() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.areview}>
-      <View style={styles.container}>
-        {data == null || data.length === 0 ? renderEmpty : renderList}
-      </View>
-    </SafeAreaView>
+    <Screen>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      {data == null || data.length === 0 ? renderEmpty : renderList}
+    </Screen>
   );
 }
