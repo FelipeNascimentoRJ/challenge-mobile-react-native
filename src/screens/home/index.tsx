@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 // Components
-import {StatusBar, Text, ActivityIndicator} from 'react-native';
+import {StatusBar, ActivityIndicator} from 'react-native';
 
 // Redux
 import {useSelector, useDispatch} from 'react-redux';
@@ -20,6 +20,9 @@ import {ICharacter} from '../../services/marvel/types/characters';
 
 // Utils
 import TextLimit from '../../utils/text-limit';
+
+// Components
+import ListEmpty from '../../components/list-empty';
 
 // Styles
 import {
@@ -100,12 +103,7 @@ export default function Home() {
     </Header>
   );
 
-  const renderEmpty = (
-    <Center>
-      <Icon name="stars" size={150} color="#1398DE" />
-      <Text>Marvel Heroes</Text>
-    </Center>
-  );
+  const renderListEmpty = <ListEmpty />;
 
   const renderCharacter = (character: ICharacter) => {
     const {id, thumbnail, name, description, events, series} = character;
@@ -178,7 +176,7 @@ export default function Home() {
         keyExtractor={(character) => `${character.id}`}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={renderEmpty}
+        ListEmptyComponent={renderListEmpty}
         ListFooterComponent={renderFooter}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
@@ -194,7 +192,7 @@ export default function Home() {
   return (
     <Screen>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      {data == null || data.length === 0 ? renderEmpty : renderList}
+      {data == null || data.length === 0 ? renderListEmpty : renderList}
     </Screen>
   );
 }
