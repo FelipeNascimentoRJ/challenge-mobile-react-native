@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 // Components
-import {StatusBar, ActivityIndicator} from 'react-native';
+import {StatusBar} from 'react-native';
 
 // Redux
 import {useSelector, useDispatch} from 'react-redux';
@@ -23,11 +23,11 @@ import TextLimit from '../../utils/text-limit';
 
 // Components
 import ListEmpty from '../../components/list-empty';
+import ListFooter from '../../components/list-footer';
 
 // Styles
 import {
   Screen,
-  Center,
   Header,
   HeaderLogo,
   HeaderActions,
@@ -104,6 +104,7 @@ export default function Home() {
   );
 
   const renderListEmpty = <ListEmpty />;
+  const renderListFooter = <ListFooter />;
 
   const renderCharacter = (character: ICharacter) => {
     const {id, thumbnail, name, description, events, series} = character;
@@ -155,18 +156,6 @@ export default function Home() {
     );
   };
 
-  const renderFooter = () => {
-    if (!characters.loading) {
-      return null;
-    }
-
-    return (
-      <Center>
-        <ActivityIndicator size="large" />
-      </Center>
-    );
-  };
-
   const renderList = (
     <>
       {renderHeader}
@@ -177,7 +166,7 @@ export default function Home() {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={renderListEmpty}
-        ListFooterComponent={renderFooter}
+        ListFooterComponent={renderListFooter}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
       />

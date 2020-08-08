@@ -5,12 +5,6 @@ export const Screen = styled.SafeAreaView`
   flex: 1;
 `;
 
-export const Center = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`;
-
 export const Header = styled.View`
   height: 56px;
   padding: 10px 0px 10px 10px;
