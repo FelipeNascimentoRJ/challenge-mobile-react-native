@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 
 // Components
 import {StatusBar} from 'react-native';
@@ -20,10 +20,15 @@ import Header from '../../components/header';
 import List from '../../components/list';
 import ListEmpty from '../../components/list-empty';
 
+// Modals
+import ModalSearch from '../../components/search';
+
 // Styles
 import {Screen} from './styles';
 
 export default function Home() {
+  // Local States
+  const [showModalSearch, setShowModalSearch] = useState<boolean>(false);
   // Dispatch
   const dispatch = useDispatch();
 
@@ -37,8 +42,9 @@ export default function Home() {
     console.log('Favorite Enabled: ', enabled);
   }, []);
 
-  // Search button press
-  const handlePressSearch = () => console.log('search');
+  // Search toggle
+  const handlePressSearchToggle = () =>
+    setShowModalSearch((prevState) => !prevState);
 
   // List item press
   const handlePressCharacter = useCallback((character: ICharacter) => {
@@ -53,7 +59,7 @@ export default function Home() {
     <>
       <Header
         onChangeFavorite={handleChangeFavorite}
-        onPressSearch={handlePressSearch}
+        onPressSearch={handlePressSearchToggle}
       />
       <List onPress={handlePressCharacter} />
     </>
@@ -70,6 +76,11 @@ export default function Home() {
       {characters.data == null || characters.data.length === 0
         ? renderListEmpty
         : renderHeaderAndList}
+      <ModalSearch
+        show={showModalSearch}
+        onClose={handlePressSearchToggle}
+        onPress={handlePressCharacter}
+      />
     </Screen>
   );
 }

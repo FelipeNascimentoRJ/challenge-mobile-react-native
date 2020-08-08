@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+
+// Local Storage
+import AsyncStorage from '@react-native-community/async-storage';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -23,9 +26,17 @@ export interface IContent {
 
 export default function ItemContent({character, onPress}: IContent) {
   const {id, thumbnail, name, description, events, series} = character;
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
-  // Temporary
-  const isFavorite = id !== undefined && id % 2 === 0;
+  useEffect(() => {
+    (async () => {
+      const is = await AsyncStorage.getItem(`${id}:fav`);
+
+      if (is) {
+        setIsFavorite(true);
+      }
+    })();
+  }, [id]);
 
   // Check is favorite
   const icon = isFavorite ? 'favorite' : 'favorite-border';

@@ -21,10 +21,11 @@ import ListFooter from '../list-footer';
 import {List as ListBuild} from './styles';
 
 export interface IList {
+  search?: string;
   onPress: (character: ICharacter) => void;
 }
 
-export default function List({onPress}: IList) {
+export default function List({search, onPress}: IList) {
   // Dispatch
   const dispatch = useDispatch();
 
@@ -35,9 +36,29 @@ export default function List({onPress}: IList) {
 
   const handleLoadMore = () => dispatch(actions.charactersRequest());
 
+  // Filter Search
+  const searching = () => {
+    if (search !== undefined && characters.data !== null) {
+      const loweSearch = search.toLowerCase();
+
+      return characters.data.filter((character: ICharacter) => {
+        if (
+          character.name !== undefined &&
+          character.name.toLowerCase().includes(loweSearch)
+        ) {
+          return true;
+        }
+
+        return false;
+      });
+    }
+
+    return [];
+  };
+
   return (
     <ListBuild
-      data={characters.data}
+      data={search !== undefined ? searching() : characters.data}
       renderItem={({item}) => <ListItem character={item} onPress={onPress} />}
       keyExtractor={(item) => `${item.id}`}
       showsHorizontalScrollIndicator={false}
