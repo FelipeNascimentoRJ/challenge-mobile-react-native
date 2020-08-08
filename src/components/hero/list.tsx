@@ -33,7 +33,7 @@ export default function ListBuild({title, data, onPressItem}: IList) {
         data={items}
         horizontal={true}
         renderItem={({item}) => renderItem(item)}
-        keyExtractor={(item) => `${item.name}`}
+        keyExtractor={(item) => `${item.name}${Math.random()}`}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       />
