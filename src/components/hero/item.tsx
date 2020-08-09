@@ -1,13 +1,7 @@
-import React, {memo, useState, useEffect, useCallback, useContext} from 'react';
+import React, {memo, useState, useEffect, useCallback} from 'react';
 
 // Components
-import {ActivityIndicator, Linking, Share} from 'react-native';
-
-// Icons
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
-// Theme
-import {ThemeContext} from '../../themes';
+import {ActivityIndicator} from 'react-native';
 
 // Types
 import {AxiosResponse} from 'axios';
@@ -23,18 +17,11 @@ import {
 import config from '../../../marvel.config.json';
 import Marvel from '../../services/marvel';
 
+// Components
+import ModalItemContent from './content';
+
 // Styles
-import {
-  Modal,
-  Container,
-  Content,
-  FloatButtonContainer,
-  ItemImage,
-  ItemTitle,
-  ItemDescription,
-  ItemButton,
-  ItemButtonLabel,
-} from './styles';
+import {Modal, Container, Content} from './styles';
 
 export interface IModalItem {
   show: boolean;
@@ -43,31 +30,9 @@ export interface IModalItem {
 }
 
 function ModalItem({show, item, onClose}: IModalItem) {
-  // Theme
-  const {theme} = useContext(ThemeContext);
-
   // Local States
   const [loading, setLoading] = useState<boolean>(true);
   const [itemResult, setItemResult] = useState<IItem | null>(null);
-
-  // Style
-  const iconStyles = {height: 30};
-
-  const handleOpenUrl = async (url: string) => {
-    const supported = await Linking.canOpenURL(url);
-
-    if (supported) {
-      await Linking.openURL(url);
-    }
-  };
-
-  const handleShareUrl = async (text: string, url: string) => {
-    await Share.share({
-      title: text, // android
-      message: text, // ios
-      url,
-    });
-  };
 
   const loadingItem = useCallback(async () => {
     if (item.resourceURI !== undefined) {
@@ -103,67 +68,11 @@ function ModalItem({show, item, onClose}: IModalItem) {
   };
 
   const renderItem = () => {
-    if (itemResult === null) {
-      return null;
+    if (itemResult !== null) {
+      return <ModalItemContent item={itemResult} onClose={onClose} />;
     }
 
-    const {thumbnail, title, description, urls} = itemResult;
-
-    let renderButton = null;
-
-    if (urls !== undefined && urls.length >= 1) {
-      const [url] = urls;
-
-      if (url.url !== undefined) {
-        renderButton = (
-          <>
-            <ItemButton
-              color={theme.primary}
-              onPress={() =>
-                handleOpenUrl(
-                  url.url !== undefined ? url.url : 'https://marvel.com',
-                )
-              }>
-              <ItemButtonLabel color="#fff">Access</ItemButtonLabel>
-            </ItemButton>
-            <ItemButton
-              color={theme.shape}
-              onPress={() =>
-                handleShareUrl(
-                  title !== undefined ? title : 'Marvel',
-                  url.url !== undefined ? url.url : 'https://marvel.com',
-                )
-              }>
-              <ItemButtonLabel color={theme.textButton}>Share</ItemButtonLabel>
-            </ItemButton>
-          </>
-        );
-      }
-    }
-
-    return (
-      <>
-        <ItemImage
-          source={{
-            uri: `${thumbnail?.path}.${thumbnail?.extension}`,
-          }}
-        />
-        <FloatButtonContainer>
-          <Icon.Button
-            name="close"
-            size={30}
-            color="#000"
-            backgroundColor="transparent"
-            iconStyle={iconStyles}
-            borderRadius={20}
-            onPress={onClose}
-          />
-        </FloatButtonContainer>
-        <ItemTitle>{title}</ItemTitle>
-        <ItemDescription>{description}</ItemDescription>
-        {renderButton}
-      </>
-    );
+    return null;
   };
 
   return (
