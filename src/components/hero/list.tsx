@@ -4,6 +4,9 @@ import React, {memo} from 'react';
 import {IEventList, IEventSummary} from '../../services/marvel/types/events';
 import {ISeriesList, ISeriesSummary} from '../../services/marvel/types/series';
 
+// Utils
+import TextLimit from '../../utils/text-limit';
+
 // Styles
 import {ListTitle, List, ListItemContainer, ListItem} from './styles';
 
@@ -22,7 +25,12 @@ function ListBuild({title, data, onPressItem}: IList) {
 
   const renderItem = (item: IEventSummary | ISeriesSummary) => (
     <ListItemContainer onPress={() => onPressItem(item)}>
-      <ListItem>{item.name}</ListItem>
+      <ListItem>
+        {TextLimit.limit(
+          item.name !== undefined ? item.name : 'Unknown Name',
+          20,
+        )}
+      </ListItem>
     </ListItemContainer>
   );
 

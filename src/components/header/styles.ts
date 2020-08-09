@@ -15,8 +15,8 @@ export const Container = styled.View<IThemeExport>`
 `;
 
 export const Logo = styled.Image`
-  width: 80px;
-  height: 30px;
+  width: 100px;
+  height: 38px;
 `;
 
 export const Actions = styled.View`

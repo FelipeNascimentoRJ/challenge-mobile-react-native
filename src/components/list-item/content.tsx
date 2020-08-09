@@ -74,7 +74,7 @@ function ItemContent({character, onPress}: IContent) {
     <Container onPress={() => onPress(character)} style={Shadow}>
       <Image thumbnail={thumbnail} />
       <Content>
-        {name ? <Name>{TextLimit.limit(name, 18)}</Name> : null}
+        {name ? <Name>{TextLimit.limit(name, 15)}</Name> : null}
 
         {description ? (
           <Description>{TextLimit.limit(description, 60)}</Description>

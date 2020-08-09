@@ -41,7 +41,14 @@ export const FloatButtonContainer = styled.View`
   position: absolute;
 `;
 
-export const Scroll = styled.ScrollView``;
+export const Scroll = styled.ScrollView.attrs(() => ({
+  horizontal: false,
+  showsVerticalScrollIndicator: false,
+  showsHorizontalScrollIndicator: false,
+  contentContainerStyle: {
+    paddingBottom: 10,
+  },
+}))``;
 
 export const Row = styled.View`
   padding: 10px;
@@ -73,8 +80,8 @@ export const ListTitle = styled(Name)`
 export const ListItemContainer = styled.TouchableOpacity<IThemeExport>`
   align-items: center;
   justify-content: center;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   margin-right: 10px;
   padding: 30px;
   background-color: ${themeProps('shape')};
