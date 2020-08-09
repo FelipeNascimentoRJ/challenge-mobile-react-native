@@ -1,13 +1,16 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+import {IThemeExport} from '../../themes/type';
+import {themeProps} from '../../themes';
+
+export const Container = styled.View<IThemeExport>`
   height: 56px;
   padding: 10px 0px 10px 10px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #fff;
-  border-color: #f5f5f5;
+  background-color: ${themeProps('background')};
+  border-color: ${themeProps('border')};
   border-bottom-width: 1px;
 `;
 

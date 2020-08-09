@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 // Types
 import {IImage} from '../../services/marvel/types/defaults';
@@ -10,7 +10,7 @@ export interface IItemImage {
   thumbnail: IImage | undefined;
 }
 
-export default function ItemImage({thumbnail}: IItemImage) {
+function ItemImage({thumbnail}: IItemImage) {
   return (
     <Image
       source={{
@@ -19,3 +19,5 @@ export default function ItemImage({thumbnail}: IItemImage) {
     />
   );
 }
+
+export default memo(ItemImage);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo, useContext} from 'react';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -18,6 +18,9 @@ import Shadow from '../../utils/shadow';
 // Styles
 import {Container, Logo, Actions} from './styles';
 
+// Theme
+import {ThemeContext} from '../../themes';
+
 // Logo
 import logo from '../../assets/logo.png';
 
@@ -25,7 +28,10 @@ export interface IHeader {
   onPressSearch: () => void;
 }
 
-export default function Header({onPressSearch}: IHeader) {
+function Header({onPressSearch}: IHeader) {
+  // Theme
+  const {theme, themeToggle} = useContext(ThemeContext);
+
   // Dispatch
   const dispatch = useDispatch();
 
@@ -48,10 +54,19 @@ export default function Header({onPressSearch}: IHeader) {
       <Logo source={logo} />
       <Actions>
         <Icon.Button
+          name="brightness-4"
+          size={30}
+          color={theme.icon}
+          backgroundColor={theme.background}
+          iconStyle={iconStyles}
+          borderRadius={200}
+          onPress={themeToggle}
+        />
+        <Icon.Button
           name={favorite.enabled ? 'favorite' : 'favorite-border'}
           size={30}
-          color={favorite.enabled ? '#ff0000' : '#666'}
-          backgroundColor="#fff"
+          color={favorite.enabled ? theme.primary : theme.icon}
+          backgroundColor={theme.background}
           iconStyle={iconStyles}
           borderRadius={200}
           onPress={handleClickFavorite}
@@ -59,8 +74,8 @@ export default function Header({onPressSearch}: IHeader) {
         <Icon.Button
           name="search"
           size={30}
-          color="#666"
-          backgroundColor="#fff"
+          color={theme.icon}
+          backgroundColor={theme.background}
           iconStyle={iconStyles}
           borderRadius={200}
           onPress={onPressSearch}
@@ -69,3 +84,5 @@ export default function Header({onPressSearch}: IHeader) {
     </Container>
   );
 }
+
+export default memo(Header);

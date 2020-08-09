@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {memo, useEffect, useContext} from 'react';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -8,6 +8,9 @@ import {useDispatch} from 'react-redux';
 
 // Actions
 import * as actions from '../../store/ducks/rootActions';
+
+// Theme
+import {ThemeContext} from '../../themes';
 
 // Types
 import {ICharacter} from '../../services/marvel/types/characters';
@@ -28,7 +31,10 @@ export interface IContent {
   onPress: (character: ICharacter) => void;
 }
 
-export default function ItemContent({character, onPress}: IContent) {
+function ItemContent({character, onPress}: IContent) {
+  // Theme
+  const {theme} = useContext(ThemeContext);
+
   const {
     id,
     favorite,
@@ -52,12 +58,11 @@ export default function ItemContent({character, onPress}: IContent) {
         }
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, id]);
 
   // Check is favorite
   const icon = favorite ? 'favorite' : 'favorite-border';
-  const color = favorite ? '#ff0000' : '#666';
+  const color = favorite ? theme.primary : theme.icon;
 
   // Event
   const eventsLength = events?.items?.length;
@@ -77,18 +82,14 @@ export default function ItemContent({character, onPress}: IContent) {
 
         <Footer>
           {events ? (
-            <Text
-              color={eventsLength ? '#000' : '#666'}
-              bold={eventsLength !== 0}>{`Events ${eventsLength}`}</Text>
+            <Text bold={eventsLength !== 0}>{`Events ${eventsLength}`}</Text>
           ) : null}
 
           {series ? (
-            <Text
-              color={seriesLength ? '#000' : '#666'}
-              bold={seriesLength !== 0}>{`Series ${seriesLength}`}</Text>
+            <Text bold={seriesLength !== 0}>{`Series ${seriesLength}`}</Text>
           ) : null}
 
-          <Text color={favorite ? '#000' : '#666'} bold={favorite}>
+          <Text bold={favorite}>
             Favorite <Icon name={icon} size={11} color={color} />
           </Text>
         </Footer>
@@ -96,3 +97,5 @@ export default function ItemContent({character, onPress}: IContent) {
     </Container>
   );
 }
+
+export default memo(ItemContent);

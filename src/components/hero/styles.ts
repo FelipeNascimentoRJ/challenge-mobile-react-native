@@ -3,6 +3,9 @@ import styled from 'styled-components/native';
 // Component
 import {FlatList} from 'react-native';
 
+import {IThemeExport} from '../../themes/type';
+import {themeProps} from '../../themes';
+
 export const Modal = styled.Modal`
   flex: 1;
 `;
@@ -17,18 +20,18 @@ export const Container = styled.View<IContainer>`
     background ? background : 'rgba(0, 0, 0, 0.3)'};
 `;
 
-export const Content = styled.View`
+export const Content = styled.View<IThemeExport>`
   flex: 1;
   margin-top: 80px;
-  background-color: #fff;
+  background-color: ${themeProps('background')};
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
 `;
 
-export const Image = styled.Image`
+export const Image = styled.Image<IThemeExport>`
   width: 100%;
   height: 260px;
-  border-color: #ccc;
+  border-color: ${themeProps('border')};
   border-bottom-width: 1px;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
@@ -38,6 +41,8 @@ export const FloatButtonContainer = styled.View`
   position: absolute;
 `;
 
+export const Scroll = styled.ScrollView``;
+
 export const Row = styled.View`
   padding: 10px;
   flex-direction: row;
@@ -45,14 +50,15 @@ export const Row = styled.View`
   justify-content: space-between;
 `;
 
-export const Name = styled.Text`
+export const Name = styled.Text<IThemeExport>`
   font-size: 22px;
   font-weight: bold;
+  color: ${themeProps('heading')};
 `;
 
-export const Description = styled.Text`
+export const Description = styled.Text<IThemeExport>`
   padding: 10px;
-  color: #666;
+  color: ${themeProps('text')};
 `;
 
 export const List = styled(FlatList as new () => FlatList)`
@@ -62,25 +68,24 @@ export const List = styled(FlatList as new () => FlatList)`
 
 export const ListTitle = styled(Name)`
   padding: 10px;
-  color: #666;
 `;
 
-export const ListItemContainer = styled.TouchableOpacity`
+export const ListItemContainer = styled.TouchableOpacity<IThemeExport>`
   align-items: center;
   justify-content: center;
   width: 120px;
   height: 120px;
   margin-right: 10px;
   padding: 30px;
-  background-color: #f5f5f5;
-  border-radius: 15px;
+  background-color: ${themeProps('shape')};
+  border-radius: ${themeProps('radius')}px;
 `;
 
-export const ListItem = styled.Text`
+export const ListItem = styled.Text<IThemeExport>`
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  color: #999;
+  color: ${({theme: {text}}) => text};
 `;
 
 /**
@@ -94,7 +99,7 @@ export const ItemImage = styled(Image)``;
 
 export const ItemDescription = styled(Description)``;
 
-export interface IItemButton {
+export interface IItemButton extends IThemeExport {
   color: string;
 }
 
@@ -104,10 +109,15 @@ export const ItemButton = styled.TouchableOpacity<IItemButton>`
   justify-content: center;
   padding: 15px;
   background-color: ${({color}) => color};
-  border-radius: 15px;
+  border-radius: ${themeProps('radius')}px;
 `;
 
-export const ItemButtonLabel = styled(Name)`
+export interface IItemButton {
+  color: string;
+}
+
+export const ItemButtonLabel = styled(Name)<IItemButton>`
   font-size: 18px;
-  color: #fff;
+  font-weight: bold;
+  color: ${({color}) => color};
 `;

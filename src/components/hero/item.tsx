@@ -1,10 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {memo, useState, useEffect, useCallback, useContext} from 'react';
 
 // Components
 import {ActivityIndicator, Linking, Share} from 'react-native';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
+// Theme
+import {ThemeContext} from '../../themes';
 
 // Types
 import {AxiosResponse} from 'axios';
@@ -39,7 +42,10 @@ export interface IModalItem {
   onClose: () => void;
 }
 
-export default function ModalItem({show, item, onClose}: IModalItem) {
+function ModalItem({show, item, onClose}: IModalItem) {
+  // Theme
+  const {theme} = useContext(ThemeContext);
+
   // Local States
   const [loading, setLoading] = useState<boolean>(true);
   const [itemResult, setItemResult] = useState<IItem | null>(null);
@@ -63,7 +69,7 @@ export default function ModalItem({show, item, onClose}: IModalItem) {
     });
   };
 
-  const loadingItem = async () => {
+  const loadingItem = useCallback(async () => {
     if (item.resourceURI !== undefined) {
       // Instance
       const marvel = new Marvel(config.privateKey, config.publicKey);
@@ -82,12 +88,11 @@ export default function ModalItem({show, item, onClose}: IModalItem) {
         })
         .catch(() => setLoading(false));
     }
-  };
+  }, [item.resourceURI]);
 
   useEffect(() => {
     loadingItem();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loadingItem]);
 
   const renderLoading = () => {
     if (!loading) {
@@ -113,23 +118,23 @@ export default function ModalItem({show, item, onClose}: IModalItem) {
         renderButton = (
           <>
             <ItemButton
-              color="#ff0000"
+              color={theme.primary}
               onPress={() =>
                 handleOpenUrl(
                   url.url !== undefined ? url.url : 'https://marvel.com',
                 )
               }>
-              <ItemButtonLabel>Access</ItemButtonLabel>
+              <ItemButtonLabel color="#fff">Access</ItemButtonLabel>
             </ItemButton>
             <ItemButton
-              color="#999"
+              color={theme.shape}
               onPress={() =>
                 handleShareUrl(
                   title !== undefined ? title : 'Marvel',
                   url.url !== undefined ? url.url : 'https://marvel.com',
                 )
               }>
-              <ItemButtonLabel>Share</ItemButtonLabel>
+              <ItemButtonLabel color={theme.textButton}>Share</ItemButtonLabel>
             </ItemButton>
           </>
         );
@@ -173,3 +178,5 @@ export default function ModalItem({show, item, onClose}: IModalItem) {
     </Modal>
   );
 }
+
+export default memo(ModalItem);

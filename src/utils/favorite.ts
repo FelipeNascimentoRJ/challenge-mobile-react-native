@@ -1,30 +1,15 @@
-// Local Storage
-import AsyncStorage from '@react-native-community/async-storage';
+import Store from './store';
 
 export default class Favorite {
   public static async isFavorite(id: number) {
-    try {
-      return (await AsyncStorage.getItem(`${id}:fav`)) !== null;
-    } catch {
-      return false;
-    }
+    return Store.exists(`${id}:fav`);
   }
 
   public static async setFavorite(id: number) {
-    try {
-      await AsyncStorage.setItem(`${id}:fav`, `${id}`);
-      return true;
-    } catch {
-      return false;
-    }
+    return Store.set(`${id}:fav`, `${id}`);
   }
 
   public static async delFavorite(id: number) {
-    try {
-      await AsyncStorage.removeItem(`${id}:fav`);
-      return true;
-    } catch {
-      return false;
-    }
+    return Store.del(`${id}:fav`);
   }
 }

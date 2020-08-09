@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {memo, useState, useContext} from 'react';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -14,6 +14,9 @@ import {ICharacter} from '../../services/marvel/types/characters';
 import {IEventSummary} from '../../services/marvel/types/events';
 import {ISeriesSummary} from '../../services/marvel/types/series';
 
+// Theme
+import {ThemeContext} from '../../themes';
+
 // Components
 import List from './list';
 import Item from './item';
@@ -28,6 +31,7 @@ import {
   Content,
   Image,
   FloatButtonContainer,
+  Scroll,
   Row,
   Name,
   Description,
@@ -39,7 +43,10 @@ export interface IModalHero {
   onClose: () => void;
 }
 
-export default function ModalHero({show, character, onClose}: IModalHero) {
+function ModalHero({show, character, onClose}: IModalHero) {
+  // Theme
+  const {theme} = useContext(ThemeContext);
+
   // Local States
   const [showModalItem, setShowModalItem] = useState<boolean>(false);
   const [item, setItem] = useState<IEventSummary | ISeriesSummary | null>(null);
@@ -114,20 +121,30 @@ export default function ModalHero({show, character, onClose}: IModalHero) {
             <Icon.Button
               name={favorite ? 'favorite' : 'favorite-border'}
               size={30}
-              color={favorite ? '#ff0000' : '#666'}
-              backgroundColor="#fff"
+              color={favorite ? theme.primary : theme.icon}
+              backgroundColor={theme.background}
               iconStyle={iconStyles}
               borderRadius={200}
               onPress={handlePressFavorite}
             />
           </Row>
-          <Description>{description}</Description>
-          {events !== undefined ? (
-            <List onPressItem={handlePressItem} title="Events" data={events} />
-          ) : null}
-          {series !== undefined ? (
-            <List onPressItem={handlePressItem} title="Series" data={series} />
-          ) : null}
+          <Scroll>
+            <Description>{description}</Description>
+            {events !== undefined ? (
+              <List
+                onPressItem={handlePressItem}
+                title="Events"
+                data={events}
+              />
+            ) : null}
+            {series !== undefined ? (
+              <List
+                onPressItem={handlePressItem}
+                title="Series"
+                data={series}
+              />
+            ) : null}
+          </Scroll>
         </Content>
       </Container>
       {item !== null ? (
@@ -136,3 +153,5 @@ export default function ModalHero({show, character, onClose}: IModalHero) {
     </Modal>
   );
 }
+
+export default memo(ModalHero);

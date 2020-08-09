@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useContext} from 'react';
 
 // Components
 import {StatusBar} from 'react-native';
@@ -15,6 +15,9 @@ import * as actions from '../../store/ducks/rootActions';
 // Types
 import {ICharacter} from '../../services/marvel/types/characters';
 
+// Theme
+import {ThemeContext} from '../../themes';
+
 // Components
 import Header from '../../components/header';
 import List from '../../components/list';
@@ -28,6 +31,9 @@ import ModalHero from '../../components/hero';
 import {Screen} from './styles';
 
 export default function Home() {
+  // Theme
+  const {theme} = useContext(ThemeContext);
+
   // Local States
   const [showModalSearch, setShowModalSearch] = useState<boolean>(false);
   const [showModalHero, setShowModalHero] = useState<boolean>(false);
@@ -68,12 +74,11 @@ export default function Home() {
 
   React.useEffect(() => {
     dispatch(actions.charactersRequest());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   return (
     <Screen>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <StatusBar barStyle={theme.status} backgroundColor={theme.background} />
       {characters.data == null || characters.data.length === 0
         ? renderListEmpty
         : renderHeaderAndList}

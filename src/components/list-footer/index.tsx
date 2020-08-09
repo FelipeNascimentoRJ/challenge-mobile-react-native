@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 // Components
 import {ActivityIndicator} from 'react-native';
@@ -12,7 +12,7 @@ import {IApplicationState} from '../../store';
 // Styles
 import {Container} from './styles';
 
-export default function ListFooter() {
+function ListFooter() {
   const characters = useSelector(
     (state: IApplicationState) => state.characters,
   );
@@ -27,3 +27,5 @@ export default function ListFooter() {
     </Container>
   );
 }
+
+export default memo(ListFooter);

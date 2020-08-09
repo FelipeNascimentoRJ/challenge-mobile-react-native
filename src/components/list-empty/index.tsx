@@ -1,16 +1,24 @@
-import React from 'react';
+import React, {memo, useContext} from 'react';
 
 // Icon
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+// Theme
+import {ThemeContext} from '../../themes';
+
 // Styles
 import {Container, Title} from './styles';
 
-export default function ListEmpty() {
+function ListEmpty() {
+  // Theme
+  const {theme} = useContext(ThemeContext);
+
   return (
     <Container>
-      <Icon name="stars" size={150} color="#ff0000" />
+      <Icon name="stars" size={150} color={theme.primary} />
       <Title>Marvel Heroes</Title>
     </Container>
   );
 }
+
+export default memo(ListEmpty);

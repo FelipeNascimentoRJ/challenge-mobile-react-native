@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 // Types
 import {IEventList, IEventSummary} from '../../services/marvel/types/events';
@@ -13,7 +13,7 @@ export interface IList {
   onPressItem: (item: IEventSummary | ISeriesSummary) => void;
 }
 
-export default function ListBuild({title, data, onPressItem}: IList) {
+function ListBuild({title, data, onPressItem}: IList) {
   const {items} = data;
 
   if (items?.length === 0) {
@@ -40,3 +40,5 @@ export default function ListBuild({title, data, onPressItem}: IList) {
     </>
   );
 }
+
+export default memo(ListBuild);

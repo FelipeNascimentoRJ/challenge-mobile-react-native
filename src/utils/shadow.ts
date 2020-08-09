@@ -1,13 +1,13 @@
 // Shadow
 const shadow = {
-  elevation: 5,
+  elevation: 2,
   shadowOffset: {
-    width: 3,
-    height: 3,
+    width: 1,
+    height: 1,
   },
   shadowColor: 'rgba(0, 0, 0, 0.2)',
   shadowOpacity: 1,
-  shadowRadius: 3,
+  shadowRadius: 1,
 };
 
 export default shadow;
