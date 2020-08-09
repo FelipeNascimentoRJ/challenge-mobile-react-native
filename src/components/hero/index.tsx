@@ -3,6 +3,12 @@ import React, {useState} from 'react';
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+// Redux
+import {useDispatch} from 'react-redux';
+
+// Actions
+import * as actions from '../../store/ducks/rootActions';
+
 // Types
 import {ICharacter} from '../../services/marvel/types/characters';
 import {IEventSummary} from '../../services/marvel/types/events';
@@ -11,6 +17,9 @@ import {ISeriesSummary} from '../../services/marvel/types/series';
 // Components
 import List from './list';
 import Item from './item';
+
+// Utils
+import Favorite from '../../utils/favorite';
 
 // Styles
 import {
@@ -41,10 +50,18 @@ export default function ModalHero({
   const [showModalItem, setShowModalItem] = useState<boolean>(false);
   const [item, setItem] = useState<IEventSummary | ISeriesSummary | null>(null);
 
-  const {thumbnail, name, description, events, series} = character;
+  // Dispatch
+  const dispatch = useDispatch();
 
-  // Temporary
-  const favoriteEnabled = true;
+  const {
+    id,
+    favorite,
+    thumbnail,
+    name,
+    description,
+    events,
+    series,
+  } = character;
 
   // Style
   const iconStyles = {height: 30};
@@ -59,6 +76,21 @@ export default function ModalHero({
   const handlePressItemClose = () => {
     setShowModalItem(false);
     setItem(null);
+  };
+
+  // Item favorite
+  const handlePressFavorite = async () => {
+    if (id !== undefined) {
+      if (await Favorite.isFavorite(id)) {
+        await Favorite.delFavorite(id);
+        dispatch(actions.characterNotFavorite(id));
+      } else {
+        await Favorite.setFavorite(id);
+        dispatch(actions.characterFavorite(id));
+      }
+    }
+
+    onPressFavorite(character);
   };
 
   return (
@@ -88,13 +120,13 @@ export default function ModalHero({
           <Row>
             <Name>{name}</Name>
             <Icon.Button
-              name={favoriteEnabled ? 'favorite' : 'favorite-border'}
+              name={favorite ? 'favorite' : 'favorite-border'}
               size={30}
-              color={favoriteEnabled ? '#ff0000' : '#666'}
+              color={favorite ? '#ff0000' : '#666'}
               backgroundColor="#fff"
               iconStyle={iconStyles}
               borderRadius={200}
-              onPress={() => onPressFavorite(character)}
+              onPress={handlePressFavorite}
             />
           </Row>
           <Description>{description}</Description>

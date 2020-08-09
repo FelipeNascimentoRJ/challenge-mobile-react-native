@@ -37,6 +37,7 @@ export interface ICharacterDataContainer {
 
 export interface ICharacter {
   id?: number;
+  favorite?: boolean;
   name?: string;
   description?: string;
   modified?: Date;

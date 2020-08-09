@@ -64,7 +64,7 @@ export default function Home() {
 
   // Favorite item press
   const handlePressFavorite = useCallback((characterSelected: ICharacter) => {
-    console.log(characterSelected);
+    console.log(characterSelected.id);
   }, []);
 
   // List empty

@@ -23,3 +23,21 @@ export function charactersRequestFailure() {
     type: CharactersTypes.CHARACTERS_REQUEST_FAILURE,
   };
 }
+
+export function characterFavorite(id: number) {
+  return {
+    type: CharactersTypes.CHARACTER_FAVORITE,
+    payload: {
+      id,
+    },
+  };
+}
+
+export function characterNotFavorite(id: number) {
+  return {
+    type: CharactersTypes.CHARACTER_NOT_FAVORITE,
+    payload: {
+      id,
+    },
+  };
+}
