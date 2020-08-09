@@ -36,16 +36,10 @@ import {
 export interface IModalHero {
   show: boolean;
   character: ICharacter;
-  onPressFavorite: (character: ICharacter) => void;
   onClose: () => void;
 }
 
-export default function ModalHero({
-  show,
-  character,
-  onPressFavorite,
-  onClose,
-}: IModalHero) {
+export default function ModalHero({show, character, onClose}: IModalHero) {
   // Local States
   const [showModalItem, setShowModalItem] = useState<boolean>(false);
   const [item, setItem] = useState<IEventSummary | ISeriesSummary | null>(null);
@@ -89,8 +83,6 @@ export default function ModalHero({
         dispatch(actions.characterFavorite(id));
       }
     }
-
-    onPressFavorite(character);
   };
 
   return (

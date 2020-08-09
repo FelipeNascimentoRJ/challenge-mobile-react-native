@@ -6,9 +6,11 @@ import rootSaga from './ducks/rootSagas';
 
 // Types
 import {ICharactersState} from './ducks/characters/types';
+import {IFavoriteState} from './ducks/favorite/types';
 
 export interface IApplicationState {
   characters: ICharactersState;
+  favorite: IFavoriteState;
 }
 
 // SagaMiddleware

@@ -37,14 +37,7 @@ export default function Home() {
   const dispatch = useDispatch();
 
   // Redux States
-  const characters = useSelector(
-    (state: IApplicationState) => state.characters,
-  );
-
-  // Favorite button changes
-  const handleChangeFavorite = useCallback((enabled: boolean) => {
-    console.log('Favorite Enabled: ', enabled);
-  }, []);
+  const {characters} = useSelector((state: IApplicationState) => state);
 
   // Search toggle
   const handlePressSearchToggle = () =>
@@ -62,21 +55,13 @@ export default function Home() {
     setCharacter(characterSelected);
   }, []);
 
-  // Favorite item press
-  const handlePressFavorite = useCallback((characterSelected: ICharacter) => {
-    console.log(characterSelected.id);
-  }, []);
-
   // List empty
   const renderListEmpty = <ListEmpty />;
 
   // Header and list
   const renderHeaderAndList = (
     <>
-      <Header
-        onChangeFavorite={handleChangeFavorite}
-        onPressSearch={handlePressSearchToggle}
-      />
+      <Header onPressSearch={handlePressSearchToggle} />
       <List onPress={handlePressCharacter} />
     </>
   );
@@ -102,7 +87,6 @@ export default function Home() {
           show={showModalHero}
           character={character}
           onClose={handlePressHeroClose}
-          onPressFavorite={handlePressFavorite}
         />
       ) : null}
     </Screen>

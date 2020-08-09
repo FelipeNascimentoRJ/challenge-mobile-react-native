@@ -30,11 +30,17 @@ export default function List({search, onPress}: IList) {
   const dispatch = useDispatch();
 
   // Redux State
-  const characters = useSelector(
-    (state: IApplicationState) => state.characters,
+  const {characters, favorite} = useSelector(
+    (state: IApplicationState) => state,
   );
 
-  const handleLoadMore = () => dispatch(actions.charactersRequest());
+  const handleLoadMore = () => {
+    if (search !== undefined || favorite.enabled === true) {
+      return;
+    }
+
+    dispatch(actions.charactersRequest());
+  };
 
   // Filter Search
   const searching = () => {
@@ -56,15 +62,41 @@ export default function List({search, onPress}: IList) {
     return [];
   };
 
+  const renderEmpty = <ListEmpty />;
+
+  const renderRooter = () => {
+    if (search !== undefined || favorite.enabled === true) {
+      return null;
+    }
+
+    return <ListFooter />;
+  };
+
+  const keyExtractor = (item: ICharacter) => `${item.id}`;
+
+  const renderItem = ({item}: {item: ICharacter}) => (
+    <ListItem character={item} onPress={onPress} />
+  );
+
+  let data: Array<ICharacter> = [];
+
+  if (search !== undefined) {
+    data = searching();
+  } else if (characters.data !== null && favorite.enabled) {
+    data = characters.data.filter((character) => character.favorite === true);
+  } else {
+    data = characters.data !== null ? characters.data : [];
+  }
+
   return (
     <ListBuild
-      data={search !== undefined ? searching() : characters.data}
-      renderItem={({item}) => <ListItem character={item} onPress={onPress} />}
-      keyExtractor={(item) => `${item.id}`}
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      ListEmptyComponent={<ListEmpty />}
-      ListFooterComponent={<ListFooter />}
+      ListEmptyComponent={renderEmpty}
+      ListFooterComponent={renderRooter()}
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
     />

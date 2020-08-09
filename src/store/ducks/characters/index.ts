@@ -1,4 +1,6 @@
 import {AnyAction, Reducer} from 'redux';
+
+// Types
 import {ICharactersState, CharactersTypes} from './types';
 import {
   ICharacterDataContainer,

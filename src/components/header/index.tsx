@@ -1,7 +1,16 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
+// Redux
+import {useSelector, useDispatch} from 'react-redux';
+
+// Store
+import {IApplicationState} from '../../store';
+
+// Actions
+import * as actions from '../../store/ducks/rootActions';
 
 // Utils
 import Shadow from '../../utils/shadow';
@@ -13,19 +22,22 @@ import {Container, Logo, Actions} from './styles';
 import logo from '../../assets/logo.png';
 
 export interface IHeader {
-  onChangeFavorite: (enabled: boolean) => void;
   onPressSearch: () => void;
 }
 
-export default function Header({onChangeFavorite, onPressSearch}: IHeader) {
-  // States
-  const [favoriteEnabled, setFavoriteEnabled] = useState<boolean>(false);
+export default function Header({onPressSearch}: IHeader) {
+  // Dispatch
+  const dispatch = useDispatch();
+
+  // Redux States
+  const {favorite} = useSelector((state: IApplicationState) => state);
 
   const handleClickFavorite = () => {
-    setFavoriteEnabled((prevState) => {
-      onChangeFavorite(!prevState);
-      return !prevState;
-    });
+    if (favorite.enabled) {
+      dispatch(actions.favoriteDisabled());
+    } else {
+      dispatch(actions.favoriteEnabled());
+    }
   };
 
   // Style
@@ -36,9 +48,9 @@ export default function Header({onChangeFavorite, onPressSearch}: IHeader) {
       <Logo source={logo} />
       <Actions>
         <Icon.Button
-          name={favoriteEnabled ? 'favorite' : 'favorite-border'}
+          name={favorite.enabled ? 'favorite' : 'favorite-border'}
           size={30}
-          color={favoriteEnabled ? '#ff0000' : '#666'}
+          color={favorite.enabled ? '#ff0000' : '#666'}
           backgroundColor="#fff"
           iconStyle={iconStyles}
           borderRadius={200}
