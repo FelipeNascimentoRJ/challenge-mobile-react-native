@@ -15,7 +15,7 @@ const INITIAL_STATE: ICharactersState = {
   data: null,
 };
 
-export const CHAR_PER_PAGE = 20;
+export const CHAR_PER_PAGE = 5;
 
 const requestState = (state: ICharactersState): ICharactersState => {
   let newState: ICharactersState = state;

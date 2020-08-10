@@ -1,36 +1,51 @@
-# Desafio em React Native
+<p align="center">
+  <a href="https://felipenascimento.dev">
+    <img src="preview/logo.png" width="300" />
+  </a>
+</p>
 
-## O que esperamos que você faça?
-Somos fãs da Marvel, quem não gosta de Super-heróis?
-A ideia é bem simples, queremos um aplicativo que nos mostre todos os personagens da Marvel além de seus eventos e séries.
+# Marvel Heroes
 
-## Requisitos básicos:
-- Utilizar a API de personsagens da marvel; (https://developer.marvel.com/docs)
-- O aplicativo deve conter uma listagem paginada em infinite scroll;
-- A listagem deverá ser ordenada por nome;
-- Uma modal com os detalhes do personagem;
-- Deve ser possível favoritar um personagem; (os favoritos devem ser salvos em base local.)
-- Deverá disponibilizar dois filtros: nome do personagem, e meus favoritos;
+Este repositório é o resultado do desafio técnico para **Superlógica**
 
-## Requisitos técnicos:
-- TypeScript;
-- Redux;
-- Usar persistência de dados; (a livre escolha de base.)
+Foi desenvolvido um simples app com os requisitos técnicos deste [documento](README_ORIGINAL.md).
 
-## Gostaríamos que:
-- Sua imaginação fluísse em relação a interface.
-- Caso tenha tempo, fique a vontade para adicionar o que achar necessário. (mas o tempo estará contando!!!)
+Adicionei 3 funcionalidades além dos requisitos técnicos.
 
-## O que iremos avaliar:
-- **Iremos observar principalmente a forma com que você irá aplicar o JavaScript.**
-- Organização estrutural do projeto;
-- Utilização de padrões de desenvolvimento;
-- Bom código;
-- Tempo utilizado;
-- UI/UX; (não precisa ser a melhor, mas precisa ser funcional.)
+- Theme **dark e light** por toggle button no header
+- **Share** para redes sociais e apps
+- **Open url** de series e eventos dos personagens quando disponível
 
-## Como iremos avaliar?
-- Faça um fork desse repósitorio. (o início será contabilizado a partir do envio das instruções.)
-- Você terá uma semana para concluir o desafio.
-- Ao termino, faça seu pull-request. (levaremos em consideração o tempo entre essas duas etapas.)
-- Após isso, é conosco!
+> <br>O prazo para entrega do desafio no documento especifica uma semana, mais me foi solicitado em 4 dias.<br><br>Para não descumprir o solicitado cheguei ao resultado abaixo em 4 dias.<br><br>Não tive mais tempo para fazer melhorias de arquitetura, refatoração, performance e design.<br><br>Agradeço a **Superlógica** pelo desafio e desejo sucesso para todos.<br><br>
+
+## Preview
+
+<p align="center">
+  <img src="preview/1.png" width="300" style="margin: 10px" />
+  <img src="preview/2.png" width="300" style="margin: 10px" />
+</p>
+
+<p align="center">
+  <img src="preview/3.png" width="300" style="margin: 10px" />
+  <img src="preview/4.png" width="300" style="margin: 10px" />
+</p>
+
+<p align="center">
+  <img src="preview/5.png" width="300" style="margin: 10px" />
+  <img src="preview/6.png" width="300" style="margin: 10px" />
+</p>
+
+<p align="center">
+  <img src="preview/7.png" width="300" style="margin: 10px" />
+  <img src="preview/8.png" width="300" style="margin: 10px" />
+</p>
+
+<p align="center">
+  <img src="preview/9.png" width="300" style="margin: 10px" />
+  <img src="preview/10.png" width="300" style="margin: 10px" />
+</p>
+
+<p align="center">
+  <img src="preview/11.png" width="300" style="margin: 10px" />
+  <img src="preview/12.png" width="300" style="margin: 10px" />
+</p>
