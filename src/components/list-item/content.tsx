@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useContext} from 'react';
+import React, {useEffect, useContext} from 'react';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -51,6 +51,7 @@ function ItemContent({character, onPress}: IContent) {
   useEffect(() => {
     (async () => {
       if (id !== undefined) {
+        // Need to warn redux
         if (await Favorite.isFavorite(id)) {
           dispatch(actions.characterFavorite(id));
         } else {
@@ -74,7 +75,7 @@ function ItemContent({character, onPress}: IContent) {
     <Container onPress={() => onPress(character)} style={Shadow}>
       <Image thumbnail={thumbnail} />
       <Content>
-        {name ? <Name>{TextLimit.limit(name, 15)}</Name> : null}
+        {name ? <Name>{TextLimit.limit(name, 18)}</Name> : null}
 
         {description ? (
           <Description>{TextLimit.limit(description, 60)}</Description>
@@ -98,4 +99,4 @@ function ItemContent({character, onPress}: IContent) {
   );
 }
 
-export default memo(ItemContent);
+export default ItemContent;

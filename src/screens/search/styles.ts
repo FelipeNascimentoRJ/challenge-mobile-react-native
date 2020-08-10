@@ -3,7 +3,10 @@ import styled from 'styled-components/native';
 import {IThemeExport} from '../../themes/type';
 import {themeProps} from '../../themes';
 
-export const Modal = styled.Modal``;
+export const Screen = styled.SafeAreaView<IThemeExport>`
+  flex: 1;
+  background-color: ${themeProps('background')};
+`;
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -38,4 +41,12 @@ export const Input = styled.TextInput<IThemeExport>`
   font-weight: bold;
   color: ${themeProps('primary')};
   background-color: transparent;
+`;
+
+export const Loading = styled.View<IThemeExport>`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  background-color: ${themeProps('background')};
 `;

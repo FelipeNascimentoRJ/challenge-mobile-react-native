@@ -1,4 +1,4 @@
-import React, {memo, useState, useContext} from 'react';
+import React, {memo, useState, useEffect, useCallback, useContext} from 'react';
 
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -48,21 +48,14 @@ function ModalHero({show, character, onClose}: IModalHero) {
   const {theme} = useContext(ThemeContext);
 
   // Local States
+  const [favState, setFavorite] = useState<boolean>(false);
   const [showModalItem, setShowModalItem] = useState<boolean>(false);
   const [item, setItem] = useState<IEventSummary | ISeriesSummary | null>(null);
 
   // Dispatch
   const dispatch = useDispatch();
 
-  const {
-    id,
-    favorite,
-    thumbnail,
-    name,
-    description,
-    events,
-    series,
-  } = character;
+  const {id, thumbnail, name, description, events, series} = character;
 
   // Style
   const iconStyles = {height: 30};
@@ -79,18 +72,46 @@ function ModalHero({show, character, onClose}: IModalHero) {
     setItem(null);
   };
 
+  const addFavorite = useCallback(
+    async (characterId: number) => {
+      await Favorite.setFavorite(characterId);
+      dispatch(actions.characterFavorite(characterId));
+      setFavorite(true);
+    },
+    [dispatch],
+  );
+
+  const delFavorite = useCallback(
+    async (characterId: number) => {
+      await Favorite.delFavorite(characterId);
+      dispatch(actions.characterNotFavorite(characterId));
+      setFavorite(false);
+    },
+    [dispatch],
+  );
+
   // Item favorite
   const handlePressFavorite = async () => {
     if (id !== undefined) {
       if (await Favorite.isFavorite(id)) {
-        await Favorite.delFavorite(id);
-        dispatch(actions.characterNotFavorite(id));
+        delFavorite(id);
       } else {
-        await Favorite.setFavorite(id);
-        dispatch(actions.characterFavorite(id));
+        addFavorite(id);
       }
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      if (id !== undefined) {
+        if (await Favorite.isFavorite(id)) {
+          addFavorite(id);
+        } else {
+          delFavorite(id);
+        }
+      }
+    })();
+  }, [addFavorite, delFavorite, id, favState]);
 
   return (
     <Modal
@@ -119,9 +140,9 @@ function ModalHero({show, character, onClose}: IModalHero) {
           <Row>
             <Name>{name}</Name>
             <Icon.Button
-              name={favorite ? 'favorite' : 'favorite-border'}
+              name={favState ? 'favorite' : 'favorite-border'}
               size={30}
-              color={favorite ? theme.primary : theme.icon}
+              color={favState ? theme.primary : theme.icon}
               backgroundColor={theme.background}
               iconStyle={iconStyles}
               borderRadius={200}

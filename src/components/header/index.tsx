@@ -1,5 +1,8 @@
 import React, {memo, useContext} from 'react';
 
+// Navigation
+import {useNavigation} from '@react-navigation/native';
+
 // Icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -24,11 +27,10 @@ import {ThemeContext} from '../../themes';
 // Logo
 import logo from '../../assets/logo.png';
 
-export interface IHeader {
-  onPressSearch: () => void;
-}
+function Header() {
+  // Navigation
+  const navigation = useNavigation();
 
-function Header({onPressSearch}: IHeader) {
   // Theme
   const {theme, themeToggle} = useContext(ThemeContext);
 
@@ -38,13 +40,17 @@ function Header({onPressSearch}: IHeader) {
   // Redux States
   const {favorite} = useSelector((state: IApplicationState) => state);
 
-  const handleClickFavorite = () => {
+  // Toggle Favorite Button
+  const handleToggleFavorite = () => {
     if (favorite.enabled) {
       dispatch(actions.favoriteDisabled());
     } else {
       dispatch(actions.favoriteEnabled());
     }
   };
+
+  // Navigate SearchScreen
+  const handlerSearchScreen = () => navigation.navigate('Search');
 
   // Style
   const iconStyles = {height: 30};
@@ -69,7 +75,7 @@ function Header({onPressSearch}: IHeader) {
           backgroundColor={theme.background}
           iconStyle={iconStyles}
           borderRadius={200}
-          onPress={handleClickFavorite}
+          onPress={handleToggleFavorite}
         />
         <Icon.Button
           name="search"
@@ -78,7 +84,7 @@ function Header({onPressSearch}: IHeader) {
           backgroundColor={theme.background}
           iconStyle={iconStyles}
           borderRadius={200}
-          onPress={onPressSearch}
+          onPress={handlerSearchScreen}
         />
       </Actions>
     </Container>

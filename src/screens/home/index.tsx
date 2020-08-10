@@ -24,18 +24,16 @@ import List from '../../components/list';
 import ListEmpty from '../../components/list-empty';
 
 // Modals
-import ModalSearch from '../../components/search';
 import ModalHero from '../../components/hero';
 
 // Styles
 import {Screen} from './styles';
 
-export default function Home() {
+export default function HomeSreen() {
   // Theme
   const {theme} = useContext(ThemeContext);
 
   // Local States
-  const [showModalSearch, setShowModalSearch] = useState<boolean>(false);
   const [showModalHero, setShowModalHero] = useState<boolean>(false);
   const [character, setCharacter] = useState<ICharacter | null>(null);
 
@@ -43,11 +41,15 @@ export default function Home() {
   const dispatch = useDispatch();
 
   // Redux States
-  const {characters} = useSelector((state: IApplicationState) => state);
+  const {characters, favorite} = useSelector(
+    (state: IApplicationState) => state,
+  );
 
-  // Search toggle
-  const handlePressSearchToggle = () =>
-    setShowModalSearch((prevState) => !prevState);
+  let data: Array<ICharacter> = characters.data !== null ? characters.data : [];
+
+  if (favorite.enabled) {
+    data = data.filter((char) => char.favorite === true);
+  }
 
   // Hero close
   const handlePressHeroClose = () => {
@@ -67,14 +69,22 @@ export default function Home() {
   // Header and list
   const renderHeaderAndList = (
     <>
-      <Header onPressSearch={handlePressSearchToggle} />
-      <List onPress={handlePressCharacter} />
+      <Header />
+      <List
+        data={data}
+        onLoadMore={() => {
+          dispatch(actions.charactersRequest());
+        }}
+        onPress={handlePressCharacter}
+      />
     </>
   );
 
   React.useEffect(() => {
-    dispatch(actions.charactersRequest());
-  }, [dispatch]);
+    if (favorite.enabled === false) {
+      dispatch(actions.charactersRequest());
+    }
+  }, [dispatch, favorite.enabled]);
 
   return (
     <Screen>
@@ -82,11 +92,6 @@ export default function Home() {
       {characters.data == null || characters.data.length === 0
         ? renderListEmpty
         : renderHeaderAndList}
-      <ModalSearch
-        show={showModalSearch}
-        onClose={handlePressSearchToggle}
-        onPress={handlePressCharacter}
-      />
       {character !== null ? (
         <ModalHero
           show={showModalHero}

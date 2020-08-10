@@ -46,9 +46,11 @@ function ModalItemContent({item, onClose}: IModalItemContent) {
   };
 
   const handleShareUrl = async (text: string, url: string) => {
+    const content = `${url} \n\n ${text} \n\n Powered By *App Marvel Heroes*`;
+
     await Share.share({
-      title: `${url} - ${text}`, // android
-      message: text, // ios
+      title: content, // android
+      message: content, // ios
       url,
     });
   };

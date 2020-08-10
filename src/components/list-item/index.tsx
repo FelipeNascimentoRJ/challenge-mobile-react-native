@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 // Types
 import {ICharacter} from '../../services/marvel/types/characters';
@@ -11,8 +11,13 @@ export interface IListItem {
   onPress: (character: ICharacter) => void;
 }
 
-const ListItem = ({character, onPress}: IListItem) => (
-  <ItemContent character={character} onPress={() => onPress(character)} />
-);
+const ListItem = ({character, onPress}: IListItem) => {
+  return useMemo(
+    () => (
+      <ItemContent character={character} onPress={() => onPress(character)} />
+    ),
+    [character, onPress],
+  );
+};
 
 export default ListItem;

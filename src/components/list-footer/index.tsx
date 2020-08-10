@@ -13,11 +13,11 @@ import {IApplicationState} from '../../store';
 import {Container} from './styles';
 
 function ListFooter() {
-  const characters = useSelector(
-    (state: IApplicationState) => state.characters,
+  const {characters, favorite} = useSelector(
+    (state: IApplicationState) => state,
   );
 
-  if (!characters.loading) {
+  if (!characters.loading || favorite.enabled === true) {
     return null;
   }
 
