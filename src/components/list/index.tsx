@@ -27,6 +27,13 @@ function List({data, onLoadMore, onPress}: IList) {
     [onPress],
   );
 
+  // Performance settings
+  const getItemLayout = (_data: any, index: number) => ({
+    length: 160,
+    offset: 160 * index,
+    index,
+  });
+
   return useMemo(
     () => (
       <ListBuild
@@ -39,6 +46,12 @@ function List({data, onLoadMore, onPress}: IList) {
         ListFooterComponent={<ListFooter />}
         onEndReached={onLoadMore}
         onEndReachedThreshold={0.1}
+        // Performance settings
+        removeClippedSubviews={true}
+        getItemLayout={getItemLayout}
+        initialNumToRender={5}
+        maxToRenderPerBatch={10}
+        windowSize={10}
       />
     ),
     [data, onLoadMore, renderItem],
